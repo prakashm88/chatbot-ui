@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Avatar Video Generator</title>
+  </head>
+  <body>
+    <h1>Generate Avatar Video</h1>
+    <form id="videoForm">
+      <label for="prompt">Enter Text Prompt:</label>
+      <textarea id="prompt" name="prompt" rows="4" cols="50">
+Welcome to VBG Day! As SVP and CIO, I'm thrilled to celebrate our achievements, innovation, and collaborative spirit. Together, we drive IT excellence. Let's make today extraordinary!</textarea
+      >
+      <br />
+
+      <label for="avatarSelection">Choose Avatar:</label>
+      <select id="avatarSelection" name="avatarSelection">
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+      </select>
+      <br />
+
+      <button type="button" onclick="generateVideo()">Generate Video</button>
+    </form>
+
+    <div id="videoResult"></div>
+
+    <script>
+      async function generateVideo() {
+        const prompt = document.getElementById("prompt").value;
+        const avatarSelection =
+          document.getElementById("avatarSelection").value;
+
+        const response = await fetch("/generate/video", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            prompt: prompt,
+            voiceId: "en-US-BrandonNeural",
+            avatarImgUrl:
+              "https://itechgenie.com/demos/genai/1560895433149.jpg",
+          }),
+        });
+
+        const data = await response.json();
+
+        if (data.videoUrl !== "error") {
+          document.getElementById("videoResult").innerHTML = `
+                    <h2>Video generated!</h2>
+                    <video controls width="600">
+                        <source src="${data.videoUrl}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                `;
+        } else {
+          document.getElementById("videoResult").innerHTML =
+            "<p>Sorry... Try again</p>";
+        }
+      }
+    </script>
+  </body>
+</html>

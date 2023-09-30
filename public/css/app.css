@@ -1,0 +1,279 @@
+body {
+  margin: 0;
+  font-family: "Arial", sans-serif;
+}
+
+#chatSpeakerIcon {
+  position: fixed;
+  bottom: 70px;
+  right: 20px;
+  background-color: #000;
+  color: #fff;
+  padding: 10px;
+  border: 1px solid #fff;
+  border-radius: 50%;
+  cursor: pointer;
+  width: 25px;
+  height: 25px;
+}
+
+#chatIcon {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #000;
+  color: #fff;
+  padding: 10px;
+  border: 1px solid #fff;
+  border-radius: 50%;
+  cursor: pointer;
+  width: 25px;
+  height: 25px;
+}
+
+#chatWindow {
+  /*  display: none;  */
+  position: fixed;
+  bottom: 20px;
+  right: 75px;
+  width: 350px;
+  height: 550px;
+  border: 1px solid #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid black;
+}
+
+#chatHeader,
+#chatFooter {
+  padding: 10px;
+}
+
+#chatHeader {
+  background: #000;
+  color: #fff;
+  font-weight: bold;
+  height: 23px;
+}
+
+#chatFooter {
+  display: inline-flex;
+  width: 95%;
+  border-top: 1px solid black;
+}
+
+#chatBody {
+  /*overflow-y: auto;*/
+  height: 78%;
+  padding: 1px 5px;
+}
+
+#chatVideo {
+  height: 40%;
+  min-height: 150px;
+  display: block;
+  /* background-color: aqua; */
+}
+
+#videoHolder {
+  width: 100%;
+  height: 100%;
+}
+
+#chatMessages {
+  height: 51%;
+  min-height: 200px;
+  max-height: 650px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align messages to the left */
+  padding-top: 10px;
+  /* border-top: 1px solid black; */
+  /* margin-top: 1px; */
+  /* font-size: 14px; */
+}
+
+#hideVideo {
+  font-size: 12px;
+  background-color: #232323;
+  color: #fff;
+  text-align: center;
+  padding: 5px 1px;
+  margin-top: 1px;
+  cursor: pointer;
+  border-radius: 0px 0px 10px 10px;
+  -webkit-border-radius: 0px 0px 10px 10px;
+  -moz-border-radius: 0px 0px 10px 10px;
+}
+
+.message {
+  position: relative;
+  padding: 18px;
+  margin: 15px 4px;
+  width: 80%;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* font-size: 14px; */
+}
+
+.sent {
+  background-color: #e3e3e3; /* Green color for sent messages */
+  align-self: flex-end; /* Align sent messages to the right */
+  text-align: left; /* Left-align text in sent messages */
+  /* color: #fff; */
+}
+
+.received {
+  background-color: #e3e3e3; /* Light gray color for received messages */
+  align-self: flex-start; /* Align received messages to the left */
+  text-align: right; /* Right-align text in received messages */
+}
+
+.icon-container {
+  position: absolute;
+  top: 0px;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1px;
+  border-radius: 50%;
+  background-color: #ffffff; /* White background for the circular overlay */
+  z-index: 1; /* Increase z-index to be above thumbs icons */
+  /* border: 0.01px solid rgb(212, 212, 212); */
+  /* background-color: #5cb85c;  */
+}
+
+.sent .icon-container {
+  /* float: right; */
+  right: 15px;
+  /* background-color: #5cb85c;  */
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #3498db; /* Blue color for the circular icon */
+  border: 0.01px solid rgb(212, 212, 212);
+}
+
+.user-icon::before,
+.robot-icon::before,
+.thumbs-up::before,
+.thumbs-down::before {
+  content: "";
+  display: block;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #ffffff; /* White background for the circular overlay */
+  position: absolute;
+  /* top: 0; */
+  /* left: 0; */
+  z-index: -1; /* Set a lower z-index to be below the circular icon */
+}
+
+.user-icon::before {
+  content: " 👤 "; /* User emoji */
+  z-index: 1;
+}
+
+.robot-icon::before {
+  content: "🤖"; /* Robot emoji */
+  z-index: 1;
+}
+
+.thumbs-container {
+  display: flex;
+  position: absolute;
+  bottom: -12px;
+  right: 10px;
+  float: right;
+  /* flex-wrap: inherit; */
+  /* border: 0.01px solid rgb(212, 212, 212); */
+  border-radius: 5px;
+}
+
+.thumbs-container icon {
+  border: none;
+  padding: 5px 1px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 5px;
+  width: 24px;
+  height: 24px;
+  display: inline;
+}
+
+.thumbs-down::before {
+  content: "👎"; /* Change to '👎' for thumbs-down */
+}
+
+.thumbs-up::before {
+  content: "👍"; /* Change to '👎' for thumbs-down */
+}
+
+.thumbs-up::before,
+.thumbs-down::before {
+  font-size: 18px; /* Adjust font size if needed */
+  color: #ffffff; /* White color for the thumbs emoji */
+  z-index: 1;
+}
+
+.thumbs-up,
+.thumbs-down {
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  margin: 4px;
+  z-index: 2; /* Increase z-index to be above circular overlays */
+}
+
+#messageInput {
+  width: 80%;
+  padding: 8px;
+  border: none;
+  border-radius: 5px;
+  margin-right: 5px;
+}
+
+#sendButton {
+  background-color: #000;
+  color: #fff;
+  border: none;
+  padding: 8px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#control-panel {
+  float: right;
+  position: absolute;
+  top: 5px;
+  right: 10px;
+}
+
+#closeButton,
+#muteButton,
+#unmuteButton,
+#increaseFont,
+#decreaseFont {
+  border: none;
+  padding: 5px 1px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 5px;
+  width: 24px;
+  height: 24px;
+  display: inline;
+}
+
+#unmuteButton {
+  display: none;
+}

@@ -30,6 +30,50 @@ app.post("/generate/video", async (req, res) => {
   }
 });
 
+let nlpCounter = 0;
+let nlpResponse = {
+  0: {
+    message: "Hello, I am your chatbot assistant !",
+    videoUrl: "./videos/wc.mp4",
+  },
+  1: {
+    message: "Welcome to VBG day",
+    videoUrl: "./videos/wael1.mp4",
+  },
+  2: {
+    message: "Welcome to VBG day",
+    videoUrl: "./videos/wael2.mp4",
+  },
+  3: {
+    message: "Create talking head video from just text and audio",
+    videoUrl: "./videos/noelle.mp4",
+  },
+};
+
+app.post("/nlp", (req, res) => {
+  const requestBody = req.body;
+  console.log(req.body);
+
+  if (counter++ <= 1) {
+    let data = {
+      status: "started",
+    };
+    res.json(JSON.stringify(data));
+  } else {
+    fs.readFile(
+      "./mocks/did-talks-generate.json",
+      "utf8",
+      function (err, data) {
+        if (err) throw err;
+        counter = 0;
+        res.json(data);
+      }
+    );
+  }
+});
+
+/*** Dummy APIS starts here  ***/
+
 let counter = 0;
 
 app.get("/dummy/talks/:id", (req, res) => {
@@ -37,7 +81,7 @@ app.get("/dummy/talks/:id", (req, res) => {
 
   console.log("choice id is " + req.params.id);
 
-  if (counter++ <= 3) {
+  if (counter++ <= 1) {
     let data = {
       status: "started",
     };

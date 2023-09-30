@@ -55,7 +55,7 @@
     "driver_url": "bank://lively/",
     "modified_at": "2023-03-22T16:39:15.603Z",
     "user_id": "google-oauth2|12345678",
-    "result_url": "https://d-id-talks-prod.s3.us-west-2.amazonaws.com/google-oauth2%12345678tlk_TMj4G1wiEGpQrdNFvrqAk/image.mp4?AWSAccessKeyId=AKIA5CUMPWEREWRWW6FGA&Expires=16795234235&Signature=C1lP87Ia1ulFdsddWWEamfZADq2HA%3D",
+    "result_url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/a/a7/How_to_make_video.webm/How_to_make_video.webm.720p.vp9.webm",
     "id": "tlk_TMj4G1wiEGpQrdNFvrqAk",
     "duration": 2,
     "started_at": "2023-03-22T16:39:13.633"
