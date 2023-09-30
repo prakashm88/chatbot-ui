@@ -1,0 +1,62 @@
+{
+    "metadata": {
+        "driver_url": "bank://lively/driver-02/flipped",
+        "mouth_open": false,
+        "num_faces": 1,
+        "num_frames": 41,
+        "processing_fps": 51.51385098457352,
+        "resolution": [
+            512,
+            512
+        ],
+        "size_kib": 334.22265625
+    },
+    "audio_url": "https://d-id-talks-prod.s3.us-west-2.amazonaws.com/google-oauth2%12345678/tlk_TMj4G1wiEGpQrdNFvrqAk/microsoft.wav?AWSAccessKeyId=AKIADED3BIK65W6FGA&Expires=167923230&Signature=BpLqGzh83cSL6DSFDSN3BE6pfc2M%3D",
+    "created_at": "2023-03-22T16:38:49.723Z",
+    "face": {
+        "mask_confidence": -1,
+        "detection": [
+            224,
+            198,
+            484,
+            553
+        ],
+        "overlap": "no",
+        "size": 512,
+        "top_left": [
+            98,
+            119
+        ],
+        "face_id": 0,
+        "detect_confidence": 0.9998300075531006
+    },
+    "config": {
+        "stitch": false,
+        "pad_audio": 0,
+        "align_driver": true,
+        "sharpen": true,
+        "auto_match": true,
+        "normalization_factor": 1,
+        "logo": {
+            "url": "ai",
+            "position": [
+                0,
+                0
+            ]
+        },
+        "motion_factor": 1,
+        "result_format": ".mp4",
+        "fluent": false,
+        "align_expand_factor": 0.3
+    },
+    "source_url": "https://d-id-talks-prod.s3.us-west-2.amazonaws.com/google-oauth2%12345678/tlk_TMj4G1wiEGpQrdNFvrqAk/source/image.jpeg?AWSAccessKeyId=AKIA5CUSDFDF5W6FGA&Expires=167233230&Signature=TtFFRJTg9kEryjaKA7%2BlqPLv98%3D",
+    "created_by": "google-oauth2|12345678",
+    "status": "done",
+    "driver_url": "bank://lively/",
+    "modified_at": "2023-03-22T16:39:15.603Z",
+    "user_id": "google-oauth2|12345678",
+    "result_url": "https://d-id-talks-prod.s3.us-west-2.amazonaws.com/google-oauth2%12345678tlk_TMj4G1wiEGpQrdNFvrqAk/image.mp4?AWSAccessKeyId=AKIA5CUMPWEREWRWW6FGA&Expires=16795234235&Signature=C1lP87Ia1ulFdsddWWEamfZADq2HA%3D",
+    "id": "tlk_TMj4G1wiEGpQrdNFvrqAk",
+    "duration": 2,
+    "started_at": "2023-03-22T16:39:13.633"
+}

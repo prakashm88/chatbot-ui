@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat Window</title>
+  <style>
+    #chatWindow {
+      width: 300px;
+      max-height: 550px;
+      border: 1px solid #ccc;
+      overflow: hidden;
+      position: relative;
+      transition: max-height 0.3s ease-in-out; /* Add a smooth transition */
+      border: 1px solid red;
+    }
+
+    #chatVideo {
+      height: 40%;
+      min-height: 250px;
+      display: block;
+      background-color: aqua;
+    }
+
+    #chatMessage {
+      height: 60%;
+      min-height: 350px;
+      max-height: 550px;
+      background-color: rebeccapurple;
+    }
+
+    #hideVideoBtn {
+      width: 100%;
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      padding: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="chatWindow">
+    <div id="chatVideo">
+        video here
+    </div>
+    <button id="hideVideoBtn" onclick="toggleVideo()">Hide Video</button>
+    <div id="chatMessage">
+      <!-- Your chat messages go here -->
+      messages here
+    </div>
+  </div>
+
+  <script>
+    function toggleVideo() {
+      var chatWindow = document.getElementById("chatWindow");
+      var chatVideo = document.getElementById("chatVideo");
+      var hideVideoBtn = document.getElementById("hideVideoBtn");
+
+      if (chatVideo.style.display === "none") {
+        chatVideo.style.display = "block";
+    //    hideVideoBtn.style.top = "auto";
+   //     hideVideoBtn.style.bottom = "0";
+   //     chatWindow.style.maxHeight = "550px";
+      } else {
+        chatVideo.style.display = "none";
+   //     hideVideoBtn.style.top = "0";
+   //     hideVideoBtn.style.bottom = "auto";
+    //    chatWindow.style.maxHeight = "100%";
+      }
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat Interface</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      
+    }
+
+    #chatIcon {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #000;
+      color: #fff;
+      padding: 10px;
+      border: 1px solid #fff;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    #chatWindow {
+    /*  display: none;  */
+      position: fixed;
+      bottom: 20px;
+      right: 75px;
+      width: 350px;
+      height: 550px;
+      border: 1px solid #fff;
+      border-radius: 10px;
+      overflow: hidden;
+	  border: 1px solid black;
+ 
+    }
+
+    #chatHeader, #chatBody, #chatFooter {
+      padding: 10px;
+    }
+	
+	#chatHeader {
+		background: #000;
+		color: #FFF;
+		font-weight: bold;
+		height: 23px;
+	}
+	
+	#chatFooter {
+		display: inline-flex;
+		width: 95%;
+		border-top: 1px solid black;
+	}
+
+    #chatBody {
+      /*overflow-y: auto;*/
+      height: 78%;
+    
+    }
+	
+    #chatVideo {
+      height: 40%;
+      min-height: 150px;
+      display: block;
+      background-color: aqua;
+    
+    }
+
+    #chatMessages {
+      height: 51%;
+      min-height: 200px;
+      max-height: 650px;
+      background-color: rebeccapurple;
+      overflow-y: auto;
+      
+    }
+	
+	#hideVideo {
+    
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      padding: 5px;
+      cursor: pointer;
+ 	}
+	
+
+    #messageInput {
+      width: 80%;
+      padding: 8px; 
+      border: none;
+      border-radius: 5px;
+      margin-right: 5px;
+    }
+
+    #sendButton {
+      background-color: #000;
+      color: #fff;
+      border: none;
+      padding: 8px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+	
+	#control-panel {
+		float: right;
+		position: absolute;
+		top: 5px;
+		right: 10px;
+	}
+	
+	 #closeButton, #muteButton, #unmuteButton, #increaseFont, #decreaseFont {
+      border: none;
+      padding: 5px 1px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-right: 5px;
+	  width: 24px;
+	  height: 24px;
+	  display: inline;
+    }
+	
+	#unmuteButton{
+		display: none;
+	}
+
+    .message {
+      margin: 10px;
+      padding: 10px;
+      border-radius: 5px;
+    }
+
+    .sent {
+      background-color: #000;
+    }
+
+    .received {
+      background-color: #fff;
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="chatIcon" onclick="toggleChat()">💬</div>
+
+  <div id="chatWindow">
+    <div id="chatHeader">
+		<div id="headerText">Chat with Us</div>
+		<div id="control-panel">
+		<!--  <button id="closeButtond" onclick="toggleChat()">Close</button>
+		
+		  <button id="muteButton" onclick="toggleMute()">Mute</button>
+		  <button id="increaseFont" onclick="adjustFontSize('increase')">+</button>
+		  <button id="decreaseFont" onclick="adjustFontSize('decrease')">-</button> -->
+		  
+		  <svg id="decreaseFont" onclick="adjustFontSize('decrease')" width="159px" height="159px" viewBox="-7.6 -7.6 91.20 91.20" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" baseProfile="full" enable-background="new 0 0 76.00 76.00" xml:space="preserve" fill="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"><rect x="-7.6" y="-7.6" width="91.20" height="91.20" rx="12.767999999999999" fill="#ffffff" strokewidth="0"></rect></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill="#000000" fill-opacity="1" stroke-linejoin="round" d="M 45,25L 59,25L 59,29L 45,29L 45,25 Z M 52.1429,56L 45.4571,56L 42.283,46.7429L 28.4375,46.7429L 25.4,56L 18.7143,56L 32.1339,20L 38.8277,20L 52.1429,56 Z M 40.7402,42.1143L 35.8464,27.417C 35.7018,26.9455 35.5464,26.1875 35.3804,25.1429L 35.2759,25.1429C 35.1313,26.1018 34.9679,26.8598 34.7857,27.417L 29.9563,42.1143L 40.7402,42.1143 Z "></path> </g></svg>
+		  
+		  <svg id="increaseFont" onclick="adjustFontSize('increase')" width="159px" height="159px" viewBox="-7.6 -7.6 91.20 91.20" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" baseProfile="full" enable-background="new 0 0 76.00 76.00" xml:space="preserve" fill="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"><rect x="-7.6" y="-7.6" width="91.20" height="91.20" rx="12.767999999999999" fill="#ffffff" strokewidth="0"></rect></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill="#000000" fill-opacity="1" stroke-width="0.2" stroke-linejoin="round" d="M 45.0001,25L 50,25L 50,20L 54,20L 54,25L 59.0001,25L 59.0001,29L 54,29L 54,34L 50,34L 50,29L 45.0001,29L 45.0001,25 Z M 52.1429,56L 45.4571,56L 42.283,46.7429L 28.4375,46.7429L 25.4,56L 18.7143,56L 32.1339,20L 38.8277,20L 52.1429,56 Z M 40.7402,42.1143L 35.8464,27.417C 35.7018,26.9455 35.5464,26.1875 35.3804,25.1429L 35.2759,25.1429C 35.1313,26.1018 34.9679,26.8598 34.7857,27.417L 29.9563,42.1143L 40.7402,42.1143 Z "></path> </g></svg>
+	  
+		   <svg  id="unmuteButton" onclick="toggleMute()"  fill="#000000" width="159px" height="159px" viewBox="-12.24 -12.24 60.48 60.48" version="1.1" xmlns="http://www.w3.org/2000/svg" stroke="#000000" stroke-width="0.00036"><g id="SVGRepo_bgCarrier" stroke-width="0"><rect x="-12.24" y="-12.24" width="60.48" height="60.48" rx="8.467199999999998" fill="#ffffff" strokewidth="0"></rect></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>volume1</title> <path d="M23.67 10.583l-0.99 2.019c0.947 0.812 1.547 2.017 1.547 3.361 0 1.482-0.336 2.822-1.453 3.626l0.957 1.707c1.461-1.311 2.381-3.213 2.381-5.331-0.001-2.145-0.946-4.071-2.442-5.382zM31.018 3.513l-1.393 1.69c2.598 2.836 4.242 6.615 4.242 10.764 0 4.142-1.641 7.916-4.23 10.751l1.391 1.725c2.963-3.336 4.758-7.648 4.758-12.476-0.001-4.815-1.819-9.12-4.768-12.454zM27.322 6.966l-1.24 1.783c1.842 1.85 3.010 4.4 3.010 7.217 0 2.874-1.215 5.469-3.123 7.329l1.289 1.711c2.305-2.354 3.693-5.484 3.693-9.039 0-3.489-1.398-6.658-3.629-9.001zM0 12.007v8.090c0 1.031 0.896 2.354 2 2.354h6.027v-12.939h-6.027c-1.104 0-2 1.465-2 2.495zM17.341 3.619l-8.381 5.777v13.25l8.381 5.84c1.104 0 2.688-0.836 2.688-1.867v-21.133c0-1.031-1.584-1.867-2.688-1.867z"></path> </g></svg>
+		   
+		
+			<svg  id="muteButton" onclick="toggleMute()"  fill="#000000" width="159px" height="159px" viewBox="-12.8 -12.8 57.60 57.60" version="1.1" xmlns="http://www.w3.org/2000/svg" stroke="#000000" stroke-width="0.00032"><g id="SVGRepo_bgCarrier" stroke-width="0"><rect x="-12.8" y="-12.8" width="57.60" height="57.60" rx="8.064" fill="#ffffff" strokewidth="0"></rect></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>volume2</title> <path d="M28.715 15.936l2.24 2.242c0.146 0.145 0.146 0.381 0 0.527l-0.791 0.791c-0.145 0.145-0.381 0.145-0.527 0l-2.24-2.242-2.242 2.242c-0.146 0.145-0.381 0.145-0.527 0l-0.791-0.791c-0.145-0.146-0.145-0.383 0-0.527l2.242-2.242-2.242-2.242c-0.145-0.146-0.145-0.381 0-0.527l0.791-0.791c0.146-0.146 0.382-0.146 0.527 0l2.242 2.241 2.24-2.241c0.146-0.146 0.383-0.146 0.527 0l0.791 0.791c0.146 0.146 0.146 0.382 0 0.527l-2.24 2.242zM18.275 28.434l-8.379-5.84v-13.251l8.379-5.777c1.105 0 2.689 0.836 2.689 1.867v21.133c0.001 1.032-1.583 1.868-2.689 1.868zM0.936 20.107v-8.153c0-1.030 0.896-2.495 2-2.495h6.027v13.001h-6.027c-1.105 0.001-2-1.321-2-2.353z"></path> </g></svg>
+		  	  
+		  <svg  id="closeButton" onclick="toggleChat()"   width="159px" height="159px" viewBox="-102.4 -102.4 1228.80 1228.80" xmlns="http://www.w3.org/2000/svg" fill="#ffffff" stroke="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"><rect x="-102.4" y="-102.4" width="1228.80" height="1228.80" rx="172.032" fill="#ffffff" strokewidth="0"></rect></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path fill="#000000" d="M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z"></path></g></svg>
+		  
+		   
+		   
+		</div>
+	</div>
+    <div id="chatBody">
+	
+		<div id="chatVideo">
+			video here
+			
+		</div>
+		<div id="hideVideo"  onclick="toggleVideo()"   >Hide Video</div>
+		<div id="chatMessages">
+			messages here
+		</div>
+	
+	</div>
+    <div id="chatFooter">
+      <input type="text" id="messageInput" placeholder="Type your message">
+      <button id="sendButton" onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <script>
+  
+	var isMuted = false ;
+  var isVideoHidden = false ;
+  
+    function toggleChat() {
+      var chatWindow = document.getElementById("chatWindow");
+      chatWindow.style.display = chatWindow.style.display === "none" ? "block" : "none";
+    }
+
+    function toggleVideo() {
+      var chatVideo = document.getElementById("chatVideo");
+      var hideVideo = document.getElementById("hideVideo");
+      var chatMessages = document.getElementById("chatMessages");
+
+      if( isVideoHidden === true ) {
+        chatVideo.style.display = "block";
+        hideVideo.innerHTML = "Hide video";  
+        chatMessages.style.height = "51%";
+      } else {
+        chatVideo.style.display = "none";
+        hideVideo.innerHTML = "Show video";  
+        chatMessages.style.height = "90%";
+      }
+
+      isVideoHidden = !isVideoHidden;
+    }
+	
+	function toggleMute() {
+      // Add your mute logic here
+     // alert("Mute button clicked!");
+	  
+	  var muteButton = document.getElementById("muteButton");
+	  var unmuteButton = document.getElementById("unmuteButton");
+	  
+	  muteButton.style.display = isMuted === true ? "inline" : "none";
+	  unmuteButton.style.display = isMuted === false ? "inline" : "none";
+	  isMuted = !isMuted ;
+    }
+
+    function adjustFontSize(action) {
+      var chatBody = document.getElementById("chatBody");
+      var currentFontSize = window.getComputedStyle(chatBody, null).getPropertyValue('font-size');
+      var currentFontSizeValue = parseFloat(currentFontSize);
+
+      if (action === 'increase') {
+        chatBody.style.fontSize = currentFontSizeValue * 1.2 + 'px';
+      } else if (action === 'decrease') {
+        chatBody.style.fontSize = currentFontSizeValue * 0.8 + 'px';
+      }
+    }
+
+
+    function sendMessage() {
+      var messageInput = document.getElementById("messageInput");
+      var chatBody = document.getElementById("chatBody");
+
+      var messageText = messageInput.value.trim();
+      if (messageText === "") return;
+
+      var messageDiv = document.createElement("div");
+      messageDiv.className = "message sent";
+      messageDiv.innerText = messageText;
+
+      chatBody.appendChild(messageDiv);
+
+      // Simulate a received message (you can replace this with actual backend communication)
+      setTimeout(function() {
+        var receivedMessageDiv = document.createElement("div");
+        receivedMessageDiv.className = "message received";
+        receivedMessageDiv.innerText = "Thank you for your message!";
+
+        chatBody.appendChild(receivedMessageDiv);
+        chatBody.scrollTop = chatBody.scrollHeight; // Scroll to the bottom of the chat
+      }, 500);
+
+      messageInput.value = "";
+      chatBody.scrollTop = chatBody.scrollHeight; // Scroll to the bottom of the chat
+    }
+  </script>
+
+</body>
+</html>
