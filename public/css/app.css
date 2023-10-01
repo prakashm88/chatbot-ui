@@ -6,42 +6,53 @@ body {
 #chatSpeakerIcon {
   position: fixed;
   bottom: 70px;
-  right: 20px;
+  right: 15px;
   background-color: #000;
   color: #fff;
   padding: 10px;
   border: 1px solid #fff;
   border-radius: 50%;
   cursor: pointer;
-  width: 25px;
-  height: 25px;
+  width: 20px;
+  height: 20px;
 }
 
 #chatIcon {
   position: fixed;
   bottom: 20px;
-  right: 20px;
+  right: 15px;
   background-color: #000;
   color: #fff;
   padding: 10px;
   border: 1px solid #fff;
   border-radius: 50%;
   cursor: pointer;
-  width: 25px;
-  height: 25px;
+  width: 20px;
+  height: 20px;
 }
 
 #chatWindow {
   /*  display: none;  */
   position: fixed;
   bottom: 20px;
-  right: 75px;
+  right: 65px;
   width: 350px;
   height: 550px;
   border: 1px solid #fff;
   border-radius: 10px;
   overflow: hidden;
   border: 1px solid black;
+}
+
+@media (max-width: 768px) {
+  #chatWindow {
+    width: 300px; /* Use full width on smaller screens */
+    max-width: none; /* Remove maximum width on smaller screens */
+    height: 95vh; /* Use full height on smaller screens */
+    border-radius: 0; /* Remove border-radius on smaller screens */
+    border-top-left-radius: 10px; /* Keep top-left border-radius for style */
+    border-top-right-radius: 10px; /* Keep top-right border-radius for style */
+  }
 }
 
 #chatHeader,
@@ -69,7 +80,7 @@ body {
 }
 
 #chatVideo {
-  height: 40%;
+  height: 30%;
   min-height: 150px;
   display: block;
   /* background-color: aqua; */
@@ -260,6 +271,7 @@ body {
 }
 
 #closeButton,
+#maxMinButton,
 #muteButton,
 #unmuteButton,
 #increaseFont,

@@ -11,8 +11,10 @@ const app = express();
 app.use(bodyParser.json());
 app.use(express.static(__dirname + "/public"));
 
-app.listen(dotenv.parsed.PORT, () => {
-  console.log("Server is running on port " + dotenv.parsed.PORT);
+let PORT = process.env.PORT;
+
+app.listen(PORT, () => {
+  console.log("Server is running on port " + PORT);
 });
 
 app.post("/generate/video", async (req, res) => {
@@ -20,8 +22,8 @@ app.post("/generate/video", async (req, res) => {
   try {
     const videoUrl = await api_helper.processDIDRequest(
       requestBody.prompt, //"hello how are you?", //
-      requestBody.voiceId, //"en-US-BrandonNeural", //
-      requestBody.avatarImgUrl //"https://itechgenie.com/demos/genai/1560895433149.jpg" //
+      "en-US-BrandonNeural", //requestBody.voiceId,
+      "https://itechgenie.com/demos/genai/1560895433149.jpg" //requestBody.avatarImgUrl
     );
     res.json({ videoUrl });
   } catch (error) {
@@ -50,26 +52,18 @@ let nlpResponse = {
   },
 };
 
-app.post("/nlp", (req, res) => {
+app.post("/secure/api/nlp", (req, res) => {
   const requestBody = req.body;
-  console.log(req.body);
-
-  if (counter++ <= 1) {
-    let data = {
-      status: "started",
-    };
-    res.json(JSON.stringify(data));
-  } else {
-    fs.readFile(
-      "./mocks/did-talks-generate.json",
-      "utf8",
-      function (err, data) {
-        if (err) throw err;
-        counter = 0;
-        res.json(data);
-      }
-    );
+  console.log("Request Obtained : " + requestBody);
+  // isVideoHidden
+  if (nlpCounter > 3) {
+    nlpCounter = 0;
   }
+
+  let respObj = nlpResponse[nlpCounter];
+  console.log("Sending resp: ", respObj);
+  res.json(JSON.stringify(respObj));
+  nlpCounter++;
 });
 
 /*** Dummy APIS starts here  ***/

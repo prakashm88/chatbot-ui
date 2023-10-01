@@ -1,12 +1,25 @@
 var isMuted = false;
-var isVideoHidden = true;
+var isVideoHidden = false;
+var isWindowMaxed = false;
+var isSmallScreenDetected = false;
+
 let msgCounter = 0;
 
 var chatVideo = document.getElementById("chatVideo");
 var hideVideo = document.getElementById("hideVideo");
 var chatMessages = document.getElementById("chatMessages");
 var messageInput = document.getElementById("messageInput");
-var chatBody = document.getElementById("chatMessages");
+
+var videoHolder = document.getElementById("videoHolder");
+var chatWindow = document.getElementById("chatWindow");
+var chatBodyContainer = document.getElementById("chatBody");
+var chatIconId = document.getElementById("chatIcon");
+var chatSpeakerIconId = document.getElementById("chatSpeakerIcon");
+
+if (window.innerWidth < 768) {
+  isSmallScreenDetected = true;
+  chatVideo.style.height = "30%";
+}
 
 if (isVideoHidden === true) {
   chatVideo.style.display = "none";
@@ -14,7 +27,13 @@ if (isVideoHidden === true) {
   chatMessages.style.height = "90%";
 }
 
-chatBody.scrollTop = chatBody.scrollHeight;
+if (isWindowMaxed === true) {
+  chatWindow.style.width = "90%";
+  chatWindow.style.height = "95%";
+  chatBodyContainer.style.height = "85%";
+}
+
+chatMessages.scrollTop = chatMessages.scrollHeight;
 
 function toggleVoiceBot() {
   alert("inside voice bot invocation");
@@ -25,9 +44,27 @@ function handleFeedback(msgId, eventType) {
 }
 
 function toggleChat() {
-  var chatWindow = document.getElementById("chatWindow");
-  chatWindow.style.display =
-    chatWindow.style.display === "none" ? "block" : "none";
+  chatWindow.style.display = chatWindow.style.display === "none" ? "block" : "none";
+}
+
+function maxMinToggle() {
+  isWindowMaxed = !isWindowMaxed;
+  if (isWindowMaxed === true) {
+    chatWindow.style.width = "90%";
+    chatWindow.style.height = "95%";
+    chatBodyContainer.style.height = "85%";
+    chatMessages.style.height = "58%";
+  } else {
+    if (window.innerWidth > 768) {
+      chatWindow.style.width = "350px";
+      chatWindow.style.height = "550px";
+    } else {
+      chatWindow.style.width = "90%";
+      chatWindow.style.height = "95%";
+    }
+    chatBodyContainer.style.height = "78%";
+    chatMessages.style.height = "51%";
+  }
 }
 
 function toggleVideo() {
@@ -57,20 +94,17 @@ function toggleMute() {
 }
 
 function adjustFontSize(action) {
-  var chatBody = document.getElementById("chatBody");
-  var currentFontSize = window
-    .getComputedStyle(chatBody, null)
-    .getPropertyValue("font-size");
+  var currentFontSize = window.getComputedStyle(chatMessages, null).getPropertyValue("font-size");
   var currentFontSizeValue = parseFloat(currentFontSize);
 
   if (action === "increase") {
-    chatBody.style.fontSize = currentFontSizeValue * 1.2 + "px";
+    chatMessages.style.fontSize = currentFontSizeValue * 1.2 + "px";
   } else if (action === "decrease") {
-    chatBody.style.fontSize = currentFontSizeValue * 0.8 + "px";
+    chatMessages.style.fontSize = currentFontSizeValue * 0.8 + "px";
   }
 }
 
-function createMessagesContainer(message, eventType, iMsgCounter) {
+function addMessageResponse(message, eventType, iMsgCounter) {
   const messagesContainer = document.createElement("div");
 
   const robotIconContainerElement = document.createElement("div");
@@ -117,7 +151,24 @@ function createMessagesContainer(message, eventType, iMsgCounter) {
     chatMessageElement.appendChild(thumbsContainerElement);
   }
 
-  return messagesContainer;
+  chatMessages.appendChild(messagesContainer);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+async function fetchNlp(message) {
+  const response = await fetch("/secure/api/nlp", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      isVideoHidden: isVideoHidden,
+      prompt: message,
+      //  voiceId: "en-US-BrandonNeural",
+      //  avatarImgUrl: "https://itechgenie.com/demos/genai/1560895433149.jpg",
+    }),
+  });
+  return await response.json();
 }
 
 function sendMessage() {
@@ -125,30 +176,46 @@ function sendMessage() {
   var messageText = messageInput.value.trim();
   if (messageText === "") return;
 
-  var messageDiv = createMessagesContainer(messageText, "sent");
+  addMessageResponse(messageText, "sent", msgCounter);
 
-  chatBody.appendChild(messageDiv);
+  fetchNlp(messageText)
+    .then((respObj) => {
+      if (respObj != null && respObj.message !== "error") {
+        let msgResp = JSON.parse(respObj);
 
+        if (!isVideoHidden) {
+          videoHolder.src = msgResp.videoUrl;
+          videoHolder.load();
+        }
+
+        addMessageResponse(msgResp.message, "received", msgCounter);
+      } else {
+        addMessageResponse("Sorry... Try again: " + error, "received", msgCounter);
+      }
+
+      messageInput.value = "";
+      chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to the bottom of the chat
+    })
+    .catch((error) => {
+      console.error("Error fetching NLP:", error);
+      addMessageResponse("Sorry... Try again: " + error, "received", msgCounter);
+    });
+
+  /*
   // Simulate a received message (you can replace this with actual backend communication)
   setTimeout(function () {
-    var receivedMessageDiv = createMessagesContainer(
-      "Thank you for your message!",
-      "received",
-      msgCounter
-    );
+    var receivedMessageDiv = createMessagesContainer("Thank you for your message!", "received", msgCounter);
 
-    chatBody.appendChild(receivedMessageDiv);
-    chatBody.scrollTop = chatBody.scrollHeight; // Scroll to the bottom of the chat
-  }, 500);
+    chatMessages.appendChild(receivedMessageDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to the bottom of the chat
+  }, 500); */
 
   messageInput.value = "";
-  chatBody.scrollTop = chatBody.scrollHeight; // Scroll to the bottom of the chat
+  chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to the bottom of the chat
 }
 
-document
-  .getElementById("messageInput")
-  .addEventListener("keydown", function (event) {
-    if (event.key === "Enter") {
-      sendMessage();
-    }
-  });
+document.getElementById("messageInput").addEventListener("keydown", function (event) {
+  if (event.key === "Enter") {
+    sendMessage();
+  }
+});

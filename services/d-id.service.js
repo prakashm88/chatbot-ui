@@ -1,8 +1,8 @@
 const axios = require("axios");
-let dotenv = require("dotenv").config().parsed;
+let dotenv = require("dotenv").config();
 
-const apiUrl = dotenv.API_URL_DID; // "https://api.d-id.com/talks" ;
-const apiKey = dotenv.API_KEY_DID;
+const apiUrl = process.env.API_URL_DID; // "https://api.d-id.com/talks" ;
+const apiKey = process.env.API_KEY_DID;
 
 async function processDIDRequest(prompt, voiceId, avatarUrl) {
   const headers = {
@@ -48,12 +48,7 @@ async function processDIDRequest(prompt, voiceId, avatarUrl) {
       let counterItr = 0;
 
       while (status === "created" || status === "started") {
-        console.log(
-          "##### ############## trying next api : " +
-            id +
-            " - with status: " +
-            status
-        );
+        console.log("##### ############## trying next api : " + id + " - with status: " + status);
 
         const getResponse = await axios.get(`${apiUrl}/${id}`, { headers });
 
@@ -80,9 +75,7 @@ async function processDIDRequest(prompt, voiceId, avatarUrl) {
             await new Promise((resolve) => setTimeout(resolve, 5000)); // Sleep for 5 seconds
           }
         } else {
-          console.log(
-            "Obtained invalid response status: " + getResponse.status
-          );
+          console.log("Obtained invalid response status: " + getResponse.status);
           status = "error";
           return "error";
         }
