@@ -1,3 +1,4 @@
+var isChatWindowOpen = true;
 var isMuted = false;
 var isVideoHidden = false;
 var isWindowMaxed = false;
@@ -44,7 +45,12 @@ function handleFeedback(msgId, eventType) {
 }
 
 function toggleChat() {
-  chatWindow.style.display = chatWindow.style.display === "none" ? "block" : "none";
+  if (isChatWindowOpen) {
+    chatWindow.style.display = "block";
+  } else {
+    chatWindow.style.display = "none";
+  }
+  isChatWindowOpen = !isChatWindowOpen;
 }
 
 function maxMinToggle() {
@@ -213,6 +219,8 @@ function sendMessage() {
   messageInput.value = "";
   chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to the bottom of the chat
 }
+
+toggleChat();
 
 document.getElementById("messageInput").addEventListener("keydown", function (event) {
   if (event.key === "Enter") {
