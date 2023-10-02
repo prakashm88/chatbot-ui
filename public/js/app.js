@@ -16,6 +16,7 @@ var chatWindow = document.getElementById("chatWindow");
 var chatBodyContainer = document.getElementById("chatBody");
 var chatIconId = document.getElementById("chatIcon");
 var chatSpeakerIconId = document.getElementById("chatSpeakerIcon");
+var waitingIcon = document.getElementById("waitingIcon");
 
 if (window.innerWidth < 768) {
   isSmallScreenDetected = true;
@@ -162,7 +163,12 @@ function addMessageResponse(message, eventType, iMsgCounter) {
 }
 
 async function fetchNlp(message) {
-  const response = await fetch("/secure/api/ccai/nlp", {
+  let nlpUrl = "/secure/api/ccai/nlp";
+  if (window.isMocked === true) {
+    nlpUrl = "/secure/api/nlp";
+  }
+
+  const response = await fetch(nlpUrl, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -182,6 +188,7 @@ function sendMessage() {
   var messageText = messageInput.value.trim();
   if (messageText === "") return;
 
+  waitingIcon.style.display = "inline";
   addMessageResponse(messageText, "sent", msgCounter);
 
   fetchNlp(messageText)
@@ -201,6 +208,7 @@ function sendMessage() {
         }
 
         addMessageResponse(resultString, "received", msgCounter);
+        waitingIcon.style.display = "none";
       } else {
         addMessageResponse("Sorry... Try again: " + error, "received", msgCounter);
       }

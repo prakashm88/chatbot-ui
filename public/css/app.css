@@ -4,7 +4,7 @@ body {
 }
 
 .pods-content {
-    width: 98%;
+  width: 98%;
 }
 
 header {
@@ -45,6 +45,19 @@ footer {
   color: #fff;
   padding: 10px;
   text-align: center;
+}
+
+#waiterDiv {
+  width: 98%;
+  text-align: center;
+  height: 10px;
+  padding: 3px;
+}
+
+#waitingIcon {
+  height: 10px;
+  padding-bottom: 3px;
+  display: none;
 }
 
 @media (max-width: 768px) {

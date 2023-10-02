@@ -72,7 +72,7 @@ app.post("/secure/api/nlp", (req, res) => {
 
   let respObj = nlpResponse[nlpCounter];
   console.log("Sending resp: ", respObj);
-  res.json(JSON.stringify(respObj));
+  res.json(JSON.parse(JSON.stringify(respObj)));
   nlpCounter++;
 });
 
@@ -82,10 +82,22 @@ app.post("/secure/api/ccai/nlp", async (req, res) => {
 
   try {
     console.log("Request Obtained : " + requestBody + " - sessionId: " + sessionId);
-    const dfResponse = await dfService.callDetectIntent(requestBody.prompt, sessionId);
+    let dfResponse = await dfService.callDetectIntent(requestBody.prompt, sessionId);
 
-    dfResponse.videoUrl = "error";
+    if (dfResponse.message != null && dfResponse.message != undefined) {
+      const videoUrl = await didService.processDIDRequest(
+        dfResponse.message,
+        "en-US-BrandonNeural", //"en-US-BrandonNeural", //requestBody.voiceId,
+        "https://itechgenie.com/demos/genai/amr-avatar.png" //requestBody.avatarImgUrl
+      );
+      console.log("New video url: " + videoUrl);
+      dfResponse.videoUrl = videoUrl;
+    } else {
+      dfResponse.message = "NO_RESPONSE_OBTAINED";
+      dfResponse.videoUrl = "error";
+    }
 
+    console.log("Generated log: ", dfResponse.message);
     res.json(dfResponse);
   } catch (error) {
     console.error(error);
@@ -106,12 +118,12 @@ app.get("/dummy/talks/:id", (req, res) => {
     let data = {
       status: "started",
     };
-    res.json(JSON.stringify(data));
+    res.json(JSON.parse(JSON.stringify(data)));
   } else {
     fs.readFile("./mocks/did-talks.json", "utf8", function (err, data) {
       if (err) throw err;
       counter = 0;
-      res.json(data);
+      res.json(JSON.parse(data));
     });
   }
   // res.json({ data: videoGenerateResp, status: "success" });
@@ -123,6 +135,6 @@ app.post("/dummy/talks", (req, res) => {
   fs.readFile("./mocks/did-talks-generate.json", "utf8", function (err, data) {
     if (err) throw err;
     res.status(201);
-    res.json(data);
+    res.json(JSON.parse(data));
   });
 });
