@@ -162,7 +162,7 @@ function addMessageResponse(message, eventType, iMsgCounter) {
 }
 
 async function fetchNlp(message) {
-  const response = await fetch("/secure/api/nlp", {
+  const response = await fetch("/secure/api/ccai/nlp", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -187,14 +187,20 @@ function sendMessage() {
   fetchNlp(messageText)
     .then((respObj) => {
       if (respObj != null && respObj.message !== "error") {
-        let msgResp = JSON.parse(respObj);
+        let msgResp = respObj;
 
-        if (!isVideoHidden) {
+        if (!isVideoHidden && msgResp.videoUrl != "error") {
           videoHolder.src = msgResp.videoUrl;
           videoHolder.load();
         }
 
-        addMessageResponse(msgResp.message, "received", msgCounter);
+        var resultString = msgResp.message.join(". ");
+
+        if (msgResp.videoUrl == "error") {
+          resultString += "\n (Video generation skipped !)";
+        }
+
+        addMessageResponse(resultString, "received", msgCounter);
       } else {
         addMessageResponse("Sorry... Try again: " + error, "received", msgCounter);
       }

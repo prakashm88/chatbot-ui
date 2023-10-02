@@ -1,13 +1,23 @@
+const dotenv = require("dotenv").config();
 const express = require("express");
 const fs = require("fs");
 const bodyParser = require("body-parser");
-let dotenv = require("dotenv").config();
+let session = require("express-session");
 
-const api_helper = require("./services/d-id.service");
+const didService = require("./services/d-id.service");
+const dfService = require("./services/df.service.js");
 
 console.log(dotenv);
 
 const app = express();
+app.use(
+  session({
+    secret: "geniebot-session",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false },
+  })
+);
 app.use(bodyParser.json());
 app.use(express.static(__dirname + "/public"));
 
@@ -20,10 +30,10 @@ app.listen(PORT, () => {
 app.post("/generate/video", async (req, res) => {
   const requestBody = req.body;
   try {
-    const videoUrl = await api_helper.processDIDRequest(
+    const videoUrl = await didService.processDIDRequest(
       requestBody.prompt, //"hello how are you?", //
-      "en-US-BrandonNeural", //requestBody.voiceId,
-      "https://itechgenie.com/demos/genai/1560895433149.jpg" //requestBody.avatarImgUrl
+      "en-US-JennyNeural", //"en-US-BrandonNeural", //requestBody.voiceId,
+      "https://itechgenie.com/demos/genai/amr-avatar.png" //requestBody.avatarImgUrl
     );
     res.json({ videoUrl });
   } catch (error) {
@@ -35,19 +45,19 @@ app.post("/generate/video", async (req, res) => {
 let nlpCounter = 0;
 let nlpResponse = {
   0: {
-    message: "Hello, I am your chatbot assistant !",
+    message: ["Hello, I am your chatbot assistant !"],
     videoUrl: "./videos/wc.mp4",
   },
   1: {
-    message: "Welcome to VBG day",
+    message: ["Welcome to VBG day"],
     videoUrl: "./videos/wael1.mp4",
   },
   2: {
-    message: "Welcome to VBG day",
+    message: ["Welcome to VBG day"],
     videoUrl: "./videos/wael2.mp4",
   },
   3: {
-    message: "Create talking head video from just text and audio",
+    message: ["Create talking head video from just text and audio"],
     videoUrl: "./videos/noelle.mp4",
   },
 };
@@ -64,6 +74,23 @@ app.post("/secure/api/nlp", (req, res) => {
   console.log("Sending resp: ", respObj);
   res.json(JSON.stringify(respObj));
   nlpCounter++;
+});
+
+app.post("/secure/api/ccai/nlp", async (req, res) => {
+  const requestBody = req.body;
+  const sessionId = req.sessionID;
+
+  try {
+    console.log("Request Obtained : " + requestBody + " - sessionId: " + sessionId);
+    const dfResponse = await dfService.callDetectIntent(requestBody.prompt, sessionId);
+
+    dfResponse.videoUrl = "error";
+
+    res.json(dfResponse);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 
 /*** Dummy APIS starts here  ***/

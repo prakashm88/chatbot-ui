@@ -1,5 +1,5 @@
-const axios = require("axios");
 let dotenv = require("dotenv").config();
+const axios = require("axios");
 
 const apiUrl = process.env.API_URL_DID; // "https://api.d-id.com/talks" ;
 const apiKey = process.env.API_KEY_DID;
@@ -38,8 +38,10 @@ async function processDIDRequest(prompt, voiceId, avatarUrl) {
 
     console.log("##### response status : " + response.status);
 
+    console.log(response);
+
     if (response.status === 201) {
-      const res = JSON.parse(response.data);
+      const res = response.data;
       const id = res.id;
       let status = "created";
 
@@ -59,7 +61,7 @@ async function processDIDRequest(prompt, voiceId, avatarUrl) {
         if (getResponse.status === 200) {
           console.log("Obtained response status: " + getResponse.status);
 
-          const resN = JSON.parse(getResponse.data);
+          const resN = getResponse.data;
           console.log("New status: " + resN.status);
 
           status = resN.status;
