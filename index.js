@@ -33,7 +33,7 @@ app.post("/generate/video", async (req, res) => {
     const videoUrl = await didService.processDIDRequest(
       requestBody.prompt, //"hello how are you?", //
       "en-US-JennyNeural", //"en-US-BrandonNeural", //requestBody.voiceId,
-      "https://itechgenie.com/demos/genai/amr-avatar.png" //requestBody.avatarImgUrl
+      "https://itechgenie.com/demos/genai/wael.png" //requestBody.avatarImgUrl
     );
     res.json({ videoUrl });
   } catch (error) {
@@ -88,7 +88,7 @@ app.post("/secure/api/ccai/nlp", async (req, res) => {
       const videoUrl = await didService.processDIDRequest(
         dfResponse.message,
         "en-US-BrandonNeural", //"en-US-BrandonNeural", //requestBody.voiceId,
-        "https://itechgenie.com/demos/genai/amr-avatar.png" //requestBody.avatarImgUrl
+        "https://itechgenie.com/demos/genai/wael.png" //requestBody.avatarImgUrl
       );
       console.log("New video url: " + videoUrl);
       dfResponse.videoUrl = videoUrl;
