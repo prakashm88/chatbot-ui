@@ -31,14 +31,15 @@
     <main>
       <div style="padding: 10px">
         <h1>Take a Selfie</h1>
-        <button id="captureBtn">Capture</button>
+        <button id="captureBtn">Capture</button> <br /><br />
 
         <video style="width: 90%; padding: 20px" id="video" autoplay></video>
 
-        <canvas id="canvas" width="640" height="480" style="padding: 10px" style="display: none"></canvas>
+        <canvas id="canvas" width="430" height="320" style="padding: 10px" style="display: none"></canvas>
 
         <img id="uploadedImage" style="display: none" />
         <span id="scrollHolder">&nbsp;</span>
+        <br />
         <button id="uploadBtn">Upload</button>
       </div>
     </main>
@@ -87,7 +88,7 @@
           uploadBtn.disabled = false;
           uploadedImage.style.display = "none";
           canvas.style.display = "block";
-          scrollHolder.scrollIntoView(false);
+          scrollHolder.scrollIntoView(true);
         });
 
         // Upload the captured photo to the server
@@ -140,6 +141,7 @@
               uploadedImage.style.display = "block";
 
               canvas.style.display = "none";
+              alert("Upload success");
             })
             .catch(function (error) {
               console.error("Error uploading photo:", error);
