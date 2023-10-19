@@ -1,6 +1,7 @@
 const dotenv = require("dotenv").config();
 const express = require("express");
 const fs = require("fs");
+let formidable = require('formidable');
 const bodyParser = require("body-parser");
 let session = require("express-session");
 
@@ -138,3 +139,26 @@ app.post("/dummy/talks", (req, res) => {
     res.json(JSON.parse(data));
   });
 });
+
+app.post("/secure/api/upload", (req, res) => {
+
+  //Create an instance of the form object
+  let form = new formidable.IncomingForm();
+
+  //Process the file upload in Node
+  form.parse(req, function (error, fields, file) {
+    let filepath = file.fileupload.filepath;
+    let newpath = '/tmp/;
+    newpath += file.fileupload.originalFilename;
+
+    //Copy the uploaded file to a custom folder
+    fs.rename(filepath, newpath, function () {
+      //Send a NodeJS file upload confirmation message
+      res.write('NodeJS File Upload Success!');
+      res.end();
+    });
+  });
+
+});
+
+
