@@ -127,7 +127,7 @@
           }
 
           // Resize the image to a maximum of 300x300 pixels while maintaining aspect ratio
-          resizeImage(imageBlob, 600, 600, function (resizedImageBlob) {
+          resizeImage(imageBlob, 500, 800, function (resizedImageBlob) {
             // Create FormData and append the resized image data with a custom name
             const formData = new FormData();
             formData.append("fileupload", resizedImageBlob, `${imageName}.png`);
