@@ -35,7 +35,7 @@
 
         <video style="width: 90%; padding: 20px" id="video" autoplay></video>
 
-        <canvas id="canvas" style="width: 90%; height: 95%; padding: 10px" style="display: none"></canvas>
+        <canvas id="canvas" width="640" height="480" style="padding: 10px" style="display: none"></canvas>
 
         <img id="uploadedImage" style="display: none" />
         <span id="scrollHolder">&nbsp;</span>
@@ -58,16 +58,6 @@
     </footer>
 
     <script>
-      function dataURItoBlob(dataURI) {
-        const byteString = atob(dataURI.split(",")[1]);
-        const ab = new ArrayBuffer(byteString.length);
-        const ia = new Uint8Array(ab);
-        for (let i = 0; i < byteString.length; i++) {
-          ia[i] = byteString.charCodeAt(i);
-        }
-        return new Blob([ab], { type: "image/png" });
-      }
-
       document.addEventListener("DOMContentLoaded", function () {
         const video = document.getElementById("video");
         const canvas = document.getElementById("canvas");
@@ -127,34 +117,34 @@
           }
 
           // Resize the image to a maximum of 300x300 pixels while maintaining aspect ratio
-          resizeImage(imageBlob, 500, 800, function (resizedImageBlob) {
-            // Create FormData and append the resized image data with a custom name
-            const formData = new FormData();
-            formData.append("fileupload", resizedImageBlob, `${imageName}.png`);
+          //resizeImage(imageBlob, 500, 800, function (resizedImageBlob) {
+          // Create FormData and append the resized image data with a custom name
+          const formData = new FormData();
+          formData.append("fileupload", imageBlob, `${imageName}.png`);
 
-            // Simulate a form submission using fetch
-            fetch("https://itechgenie.com/demos/genai/up.php?x-auth=" + window.UPLOAD_API_KEY, {
-              method: "POST",
-              body: formData,
+          // Simulate a form submission using fetch
+          fetch("https://itechgenie.com/demos/genai/up.php?x-auth=" + window.UPLOAD_API_KEY, {
+            method: "POST",
+            body: formData,
+          })
+            .then(function (response) {
+              if (!response.ok) {
+                throw new Error("Failed to upload photo.");
+              }
+              return response.json();
             })
-              .then(function (response) {
-                if (!response.ok) {
-                  throw new Error("Failed to upload photo.");
-                }
-                return response.json();
-              })
-              .then(function (data) {
-                console.log("Photo uploaded successfully:", data);
-                // Display the uploaded image
-                uploadedImage.src = imageData;
-                uploadedImage.style.display = "block";
+            .then(function (data) {
+              console.log("Photo uploaded successfully:", data);
+              // Display the uploaded image
+              uploadedImage.src = imageData;
+              uploadedImage.style.display = "block";
 
-                canvas.style.display = "none";
-              })
-              .catch(function (error) {
-                console.error("Error uploading photo:", error);
-              });
-          });
+              canvas.style.display = "none";
+            })
+            .catch(function (error) {
+              console.error("Error uploading photo:", error);
+            });
+          //});
         });
 
         // Function to resize the image
