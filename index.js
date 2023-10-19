@@ -145,7 +145,15 @@ app.post("/secure/api/upload", (req, res) => {
   //Create an instance of the form object
   let form = new formidable.IncomingForm();
 
-  //Process the file upload in Node
+  form.parse(req, (err, fields, files) => {
+    if (err) {
+      next(err);
+      return;
+    }
+    res.json({ fields, files });
+  });
+
+/*  //Process the file upload in Node
   form.parse(req, function (error, fields, file) {
     let filepath = file.fileupload.filepath;
     let newpath = '/tmp/';
@@ -158,7 +166,7 @@ app.post("/secure/api/upload", (req, res) => {
       res.end();
     });
   });
-
+*/
 });
 
 
