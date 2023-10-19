@@ -1,13 +1,15 @@
 <html> 
   <head><title> NodeJS File Upload Example </title></head> 
   <body>
-    <form action="http://localhost:80/upload" method="post" enctype="multipart/form-data">
-      <!-- HTML5 file upload selector-->
+  <!--  <form action="http://localhost:80/upload" method="post" enctype="multipart/form-data">
+     
    
       <input id="fileupload" type="file" name="fileupload" /><br />
 <button id="upload-button" onclick="uploadFile()" > Upload </button>
-    </form>
-
+    </form> -->
+<input id="fileupload" type="file" name="fileupload" /><br />
+<button id="upload-button" onclick="uploadFile()" > Upload </button>
+ 
     <script>
 async function uploadFile() {
   let formData = new FormData(); 
