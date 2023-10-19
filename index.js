@@ -150,7 +150,17 @@ app.post("/secure/api/upload", (req, res) => {
       next(err);
       return;
     }
-    res.json({ fields, files });
+
+    let filepath = files.fileupload[0].filepath;
+    let newpath = './public/tmp/';
+    newpath += files.fileupload[0].originalFilename;
+    
+   // res.json({ fields, files });
+     fs.rename(filepath, newpath, function () {
+      //Send a NodeJS file upload confirmation message
+      res.write("NodeJS File Upload Success! <br /> <a href='/tmp/" + files.fileupload[0].originalFilename + "'></a>");
+      res.end();
+    });
   });
 
 /*  //Process the file upload in Node
