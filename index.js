@@ -1,7 +1,7 @@
 const dotenv = require("dotenv").config();
 const express = require("express");
 const fs = require("fs");
-let formidable = require('formidable');
+let formidable = require("formidable");
 const bodyParser = require("body-parser");
 let session = require("express-session");
 
@@ -88,8 +88,8 @@ app.post("/secure/api/ccai/nlp", async (req, res) => {
     if (dfResponse.message != null && dfResponse.message != undefined) {
       const videoUrl = await didService.processDIDRequest(
         dfResponse.message,
-        "en-US-BrandonNeural", //"en-US-BrandonNeural", //requestBody.voiceId,
-        "https://itechgenie.com/demos/genai/wael.png" //requestBody.avatarImgUrl
+        requestBody.voiceId, //"en-US-BrandonNeural", //"en-US-BrandonNeural", //requestBody.voiceId,
+        requestBody.avatarImgUrl //  "https://itechgenie.com/demos/genai/wael.png"
       );
       console.log("New video url: " + videoUrl);
       dfResponse.videoUrl = videoUrl;
@@ -104,6 +104,15 @@ app.post("/secure/api/ccai/nlp", async (req, res) => {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
+});
+
+app.get("/secure/api/keys", (req, res) => {
+  data = {
+    UPLOAD_API_KEY: process.env.UPLOAD_API_KEY || "EMPTY",
+  };
+  // const requestBody = req.body;
+  res.json({ keys: data, status: "success" });
+  // res.json({ data: videoGenerateResp, status: "success" });
 });
 
 /*** Dummy APIS starts here  ***/
@@ -141,7 +150,6 @@ app.post("/dummy/talks", (req, res) => {
 });
 
 app.post("/secure/api/upload", (req, res) => {
-
   //Create an instance of the form object
   let form = new formidable.IncomingForm();
 
@@ -152,18 +160,18 @@ app.post("/secure/api/upload", (req, res) => {
     }
 
     let filepath = files.fileupload[0].filepath;
-    let newpath = './public/tmp/';
+    let newpath = "./public/tmp/";
     newpath += files.fileupload[0].originalFilename;
-    
-   // res.json({ fields, files });
-     fs.rename(filepath, newpath, function () {
+
+    // res.json({ fields, files });
+    fs.rename(filepath, newpath, function () {
       //Send a NodeJS file upload confirmation message
       res.write("NodeJS File Upload Success! <br /> <a href='/tmp/" + files.fileupload[0].originalFilename + "'></a>");
       res.end();
     });
   });
 
-/*  //Process the file upload in Node
+  /*  //Process the file upload in Node
   form.parse(req, function (error, fields, file) {
     let filepath = file.fileupload.filepath;
     let newpath = '/tmp/';
@@ -178,5 +186,3 @@ app.post("/secure/api/upload", (req, res) => {
   });
 */
 });
-
-

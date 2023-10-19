@@ -20,7 +20,7 @@ async function processDIDRequest(prompt, voiceId, avatarUrl) {
         voice_id: voiceId,
       },
       ssml: "false",
-      input: prompt,
+      input: prompt[0],
     },
     config: {
       fluent: "false",

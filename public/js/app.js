@@ -6,6 +6,9 @@ var isSmallScreenDetected = false;
 
 let msgCounter = 0;
 
+let itemListFromApi = [];
+let langLists = ["en-US-BrandonNeural", "en-US-ChristopherNeural", "en-US-AshleyNeural", "en-US-AriaNeural"];
+
 var chatVideo = document.getElementById("chatVideo");
 var hideVideo = document.getElementById("hideVideo");
 var chatMessages = document.getElementById("chatMessages");
@@ -20,7 +23,7 @@ var waitingIcon = document.getElementById("waitingIcon");
 
 if (window.innerWidth < 768) {
   isSmallScreenDetected = true;
-  chatVideo.style.height = "30%";
+  if (chatVideo) chatVideo.style.height = "30%";
 }
 
 if (isVideoHidden === true) {
@@ -35,7 +38,7 @@ if (isWindowMaxed === true) {
   chatBodyContainer.style.height = "85%";
 }
 
-chatMessages.scrollTop = chatMessages.scrollHeight;
+if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight;
 
 function toggleVoiceBot() {
   alert("inside voice bot invocation");
@@ -46,12 +49,14 @@ function handleFeedback(msgId, eventType) {
 }
 
 function toggleChat() {
-  if (isChatWindowOpen) {
-    chatWindow.style.display = "block";
-  } else {
-    chatWindow.style.display = "none";
+  if (chatWindow) {
+    if (isChatWindowOpen) {
+      chatWindow.style.display = "block";
+    } else {
+      chatWindow.style.display = "none";
+    }
+    isChatWindowOpen = !isChatWindowOpen;
   }
-  isChatWindowOpen = !isChatWindowOpen;
 }
 
 function maxMinToggle() {
@@ -163,6 +168,13 @@ function addMessageResponse(message, eventType, iMsgCounter) {
 }
 
 async function fetchNlp(message) {
+  var selectedAvatar = localStorage.getItem("selected-avatar");
+  var selectedLang = localStorage.getItem("selected-lang");
+
+  if (!selectedAvatar || !selectedLang) {
+    avatarImages();
+  }
+
   let nlpUrl = "/secure/api/ccai/nlp";
   if (window.isMocked === true) {
     nlpUrl = "/secure/api/nlp";
@@ -176,8 +188,8 @@ async function fetchNlp(message) {
     body: JSON.stringify({
       isVideoHidden: isVideoHidden,
       prompt: message,
-      //  voiceId: "en-US-BrandonNeural",
-      //  avatarImgUrl: "https://itechgenie.com/demos/genai/1560895433149.jpg",
+      voiceId: selectedLang, // "en-US-BrandonNeural",
+      avatarImgUrl: "https://itechgenie.com/demos/genai/pics/" + selectedAvatar,
     }),
   });
   return await response.json();
@@ -234,9 +246,125 @@ function sendMessage() {
   chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to the bottom of the chat
 }
 
-toggleChat();
+async function fetchAndSetApiKeys() {
+  try {
+    // Make an API call to retrieve keys
+    const response = await fetch("/secure/api/keys");
+    if (!response.ok) {
+      throw new Error("Failed to retrieve API keys");
+    }
 
-document.getElementById("messageInput").addEventListener("keydown", function (event) {
+    // Parse the response as JSON
+    const data = await response.json();
+    console.log("Obtianed data: ", data);
+
+    // Access the UPLOAD_API_KEY from the keys object
+    if (data.keys && data.keys.UPLOAD_API_KEY) {
+      // Set the API key at the window level
+      window.UPLOAD_API_KEY = data.keys.UPLOAD_API_KEY;
+      console.log("API key retrieved:", window.UPLOAD_API_KEY);
+      avatarImages();
+    } else {
+      throw new Error("API key not found in the response");
+    }
+  } catch (error) {
+    console.error("Error:", error.message);
+  }
+}
+
+async function avatarImages() {
+  try {
+    // Make an API call to retrieve keys
+    const response = await fetch("https://itechgenie.com/demos/genai/l.php?x-auth=" + window.UPLOAD_API_KEY);
+    if (!response.ok) {
+      throw new Error("Failed to retrieve images");
+    }
+
+    // Parse the response as JSON
+    const data = await response.json();
+    console.log("Obtianed data: ", data);
+
+    // Access the UPLOAD_API_KEY from the keys object
+    if (data && data.avatars) {
+      // Set the API key at the window level
+      window.avatars = data.avatars;
+      console.log("avatars retrieved:", window.avatars);
+      itemListFromApi = data.avatars;
+    } else {
+      throw new Error("API key not found in the response");
+    }
+  } catch (error) {
+    console.error("Error:", error.message);
+  }
+}
+
+// Function to open the modal
+function openModal() {
+  avatarImages().then((respObj) => {
+    // Populate the select element with options from the API
+    const itemListSelect = document.getElementById("itemList");
+    const langListSelect = document.getElementById("langList");
+    itemListFromApi.forEach((item) => {
+      const option = document.createElement("option");
+      option.value = item;
+      option.text = item;
+      itemListSelect.appendChild(option);
+    });
+
+    langLists.forEach((item) => {
+      const option = document.createElement("option");
+      option.value = item;
+      option.text = item;
+      langListSelect.appendChild(option);
+    });
+
+    // Show the modal and overlay
+    document.getElementById("myModal").style.display = "block";
+    document.getElementById("overlay").style.display = "block";
+  });
+}
+
+// Function to close the modal
+function closeModal() {
+  // Clear the select element
+  document.getElementById("itemList").innerHTML = "";
+
+  // Hide the modal and overlay
+  document.getElementById("myModal").style.display = "none";
+  document.getElementById("overlay").style.display = "none";
+}
+
+// Function to select an item and store it in local storage
+function selectItem() {
+  const selectedItem = document.getElementById("itemList").value;
+  const langListItem = document.getElementById("langList").value;
+
+  // Store the selected item in local storage
+  if (selectedItem) {
+    window.localStorage.setItem("selected-avatar", selectedItem);
+    //alert("Selected avatar: " + selectedItem);
+    closeModal();
+  } else {
+    alert("Please select an avatar");
+  }
+
+  if (langListItem) {
+    window.localStorage.setItem("selected-lang", langListItem);
+    //alert("Selected lang: " + langListItem);
+    closeModal();
+  } else {
+    alert("Please select a language");
+  }
+}
+
+function loadBot() {
+  toggleChat();
+  fetchAndSetApiKeys();
+}
+
+window.onload = loadBot;
+
+document.getElementById("messageInput")?.addEventListener("keydown", function (event) {
   if (event.key === "Enter") {
     sendMessage();
   }
