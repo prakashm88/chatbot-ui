@@ -148,7 +148,7 @@ app.post("/secure/api/upload", (req, res) => {
   //Process the file upload in Node
   form.parse(req, function (error, fields, file) {
     let filepath = file.fileupload.filepath;
-    let newpath = '/tmp/;
+    let newpath = '/tmp/';
     newpath += file.fileupload.originalFilename;
 
     //Copy the uploaded file to a custom folder
