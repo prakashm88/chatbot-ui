@@ -179,6 +179,15 @@ async function fetchNlp(message) {
   if (window.isMocked === true) {
     nlpUrl = "/secure/api/nlp";
   }
+  let _avatarUrl = "https://itechgenie.com/demos/genai/pics/" + selectedAvatar;
+
+  try {
+    window.newrelic.addCustomAttribute("prompt", message);
+    window.newrelic.addCustomAttribute("voiceId", selectedLang);
+    window.newrelic.addCustomAttribute("avatarUrl", _avatarUrl);
+  } catch (error) {
+    console.error("unable to sent nr", error);
+  }
 
   const response = await fetch(nlpUrl, {
     method: "POST",
@@ -189,7 +198,7 @@ async function fetchNlp(message) {
       isVideoHidden: isVideoHidden,
       prompt: message,
       voiceId: selectedLang, // "en-US-BrandonNeural",
-      avatarImgUrl: "https://itechgenie.com/demos/genai/pics/" + selectedAvatar,
+      avatarImgUrl: _avatarUrl,
     }),
   });
   return await response.json();
