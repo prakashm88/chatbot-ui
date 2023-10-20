@@ -182,9 +182,11 @@ async function fetchNlp(message) {
   let _avatarUrl = "https://itechgenie.com/demos/genai/pics/" + selectedAvatar;
 
   try {
-    window.newrelic.addCustomAttribute("prompt", message);
-    window.newrelic.addCustomAttribute("voiceId", selectedLang);
-    window.newrelic.addCustomAttribute("avatarUrl", _avatarUrl);
+    if (typeof newrelic == "object") {
+      window.newrelic.setCustomAttribute("prompt", message);
+      window.newrelic.setCustomAttribute("voiceId", selectedLang);
+      window.newrelic.setCustomAttribute("avatarUrl", _avatarUrl);
+    }
   } catch (error) {
     console.error("unable to sent nr", error);
   }
