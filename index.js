@@ -77,6 +77,32 @@ app.post("/secure/api/nlp", (req, res) => {
   nlpCounter++;
 });
 
+app.post("/secure/api/tts", async (req, res) => {
+  const requestBody = req.body;
+  console.log(req.body);
+  try {
+    console.log("Request Obtained : " + requestBody);
+    let dfResponse = await dfService.synthesize(requestBody.text);
+    res.setHeader("Content-Type", "application/octet-stream");
+    res.setHeader("Content-Disposition", 'attachment; filename="' + Date.now().toString(36) + '-file.mp3"');
+    res.send(dfResponse);
+  } catch (e) {
+    console.error(e);
+  }
+});
+
+app.post("/secure/api/tts/voices", async (req, res) => {
+  const requestBody = req.body;
+  console.log(req.body);
+  try {
+    console.log("Request Obtained : " + requestBody);
+    let dfResponse = await dfService.listVoices(requestBody.langCode);
+    res.json(dfResponse);
+  } catch (e) {
+    console.error(e);
+  }
+});
+
 app.post("/secure/api/ccai/nlp", async (req, res) => {
   const requestBody = req.body;
   const sessionId = req.sessionID;

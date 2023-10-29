@@ -20,6 +20,8 @@ const agentId = "bb19218a-e37e-4e5a-a3a4-6a8db12adab8";
 
 // Imports the Google Cloud Some API library
 const { SessionsClient } = require("@google-cloud/dialogflow-cx");
+const textToSpeech = require("@google-cloud/text-to-speech");
+
 /**
  * Example for regional endpoint:
  *   const location = 'us-central1'
@@ -96,6 +98,37 @@ async function callDetectIntent(query, sessionId) {
   return { message: dispText, response };
 }
 
+async function listVoices(languageCode) {
+  const client = new textToSpeech.TextToSpeechClient();
+
+  const [result] = await client.listVoices({ languageCode });
+  const voices = result.voices;
+
+  voices.forEach((voice) => {
+    console.log(`${voice.name} (${voice.ssmlGender}): ${voice.languageCodes}`);
+  });
+  return voices;
+}
+
+async function synthesize(text) {
+  const client = new textToSpeech.TextToSpeechClient();
+
+  // const text = "This is a demonstration of the Google Cloud Text-to-Speech API";
+
+  const request = {
+    input: { text: text },
+    voice: { languageCode: "en-US", ssmlGender: "FEMALE", name: "en-US-Studio-O" },
+    audioConfig: { audioEncoding: "MP3" },
+  };
+
+  const [response] = await client.synthesizeSpeech(request);
+  // Write the binary audio content to a local file
+  // const writeFile = util.promisify(fs.writeFile);
+  // await writeFile("output.mp3", response.audioContent, "binary");
+  console.log("Audio content written to file: output.mp3");
+  return response.audioContent;
+}
+
 //callDetectIntent("how to make payments", "prakashm88-0123");
 
-module.exports = { callDetectIntent };
+module.exports = { callDetectIntent, listVoices, synthesize };
